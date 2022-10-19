@@ -62,13 +62,20 @@ class ViewController: UIViewController {
         currentAnswer.isUserInteractionEnabled = false
         view.addSubview(currentAnswer)
         
-        let submit = UIButton(type: .system)
+        
+        var configuration = UIButton.Configuration.filled()
+        configuration.baseBackgroundColor = UIColor.blue
+        configuration.buttonSize = .large
+        
+        let submit = UIButton(configuration: configuration,  primaryAction: nil)
         submit.translatesAutoresizingMaskIntoConstraints = false
         submit.setTitle("SUBMIT", for: .normal)
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
+        submit.configuration?.buttonSize = .large
+        submit.configuration?.cornerStyle = .medium
         view.addSubview(submit)
         
-        let clear = UIButton(type: .system)
+        let clear = UIButton(configuration: configuration,  primaryAction: nil)
         clear.translatesAutoresizingMaskIntoConstraints = false
         clear.setTitle("CLEAR", for: .normal)
         clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
@@ -163,11 +170,19 @@ class ViewController: UIViewController {
             currentAnswer.text = ""
             score += 1
             
-            if score % 7 == 0 {
+            if score == 7 || score == 6 || score == 5 {
                 let ac = UIAlertController(title: "Well done!", message: "Are you ready for the next level?", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "Let's go!", style: .default, handler: levelUp))
                 present(ac, animated: true)
             }
+        } else {
+            score -= 1
+            var alert = UIAlertController(title: "Confirm", message: "Wrong, try one more time :)\nYour score: \(score)", preferredStyle: .alert)
+            let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+                print("Ok button tapped")
+            })
+            alert.addAction(ok)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
@@ -229,7 +244,5 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    
 }
 
